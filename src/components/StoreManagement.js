@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import EnhancedAnalytics from './EnhancedAnalytics';
 import Receipt from './Receipt';
+import CurrencyConverter from './CurrencyConverter';
 import { useThemeMode } from '../hooks/useThemeMode';
 import { PRESET_PRODUCTS, CATEGORIES, PRODUCT_STATUS, PAYMENT_METHODS, CAPITAL_WARNING_THRESHOLD } from '../constants/data';
 
@@ -226,6 +227,9 @@ const StoreManagement = () => {
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
       <div className="p-4 max-w-7xl mx-auto space-y-6">
+        {/* محول العملات */}
+        <CurrencyConverter />
+        
         {/* زر تبديل المظهر */}
         <button
           onClick={toggleTheme}
@@ -500,8 +504,8 @@ const StoreManagement = () => {
             <CardTitle className="text-2xl text-gray-800 dark:text-gray-200">سجل الطلبات</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="table-styles">
+            <div className="overflow-x-auto" style={{ maxHeight: '600px' }}>
+              <table className="table-styles w-full">
                 <thead>
                   <tr>
                     <th>التاريخ</th>
