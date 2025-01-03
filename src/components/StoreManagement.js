@@ -54,6 +54,8 @@ const StoreManagement = () => {
     paymentMethod: Object.values(PAYMENT_METHODS)[0]
   });
 
+  const [showCapitalWarning, setShowCapitalWarning] = useState(false);
+
   // حفظ البيانات عند كل تغيير
   useEffect(() => {
     try {
@@ -62,7 +64,8 @@ const StoreManagement = () => {
 
       // تنبيه رأس المال المنخفض
       if (calculateStats().remainingCapital < CAPITAL_WARNING_THRESHOLD) {
-        alert('تنبيه: رأس المال منخفض!');
+        setShowCapitalWarning(true);
+        setTimeout(() => setShowCapitalWarning(false), 5000); // إخفاء بعد 5 ثواني
       }
     } catch (error) {
       console.error('Error saving data:', error);
@@ -514,15 +517,15 @@ const StoreManagement = () => {
                 <tbody>
                   {filteredOrders.map((order, index) => (
                     <tr key={index}>
-                      <td>{formatDate(order.date)}</td>
-                      <td>{order.productName}</td>
-                      <td>{order.cost.toLocaleString()} د.ع</td>
-                      <td>{order.price.toLocaleString()} د.ع</td>
-                      <td className="font-medium text-green-600 dark:text-green-400">
+                      <td data-label="التاريخ">{formatDate(order.date)}</td>
+                      <td data-label="المنتج">{order.productName}</td>
+                      <td data-label="التكلفة">{order.cost.toLocaleString()} د.ع</td>
+                      <td data-label="سعر البيع">{order.price.toLocaleString()} د.ع</td>
+                      <td data-label="الربح" className="font-medium text-green-600 dark:text-green-400">
                         {(order.price - order.cost).toLocaleString()} د.ع
                       </td>
-                      <td>{order.paymentMethod}</td>
-                      <td>
+                      <td data-label="طريقة الدفع">{order.paymentMethod}</td>
+                      <td data-label="الحالة">
                         <span className={`status-badge ${
                           order.status === PRODUCT_STATUS.NEW ? 'status-new' :
                           order.status === PRODUCT_STATUS.COMPLETED ? 'status-completed' :
@@ -568,6 +571,13 @@ const StoreManagement = () => {
             onClose={() => setSelectedReceipt(null)}
             theme={theme}
           />
+        )}
+
+        {/* تنبيه رأس المال المنخفض */}
+        {showCapitalWarning && (
+          <div className="notification notification-warning">
+            تنبيه: رأس المال منخفض!
+          </div>
         )}
       </div>
     </div>

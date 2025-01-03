@@ -10,11 +10,17 @@ const Receipt = ({ order, onClose, theme }) => {
   const receiptNumber = `INV-${Math.random().toString(36).substr(2, 9)}`;
 
   return (
-    <div className={`fixed inset-0 flex items-center justify-center z-50 ${
-      theme === 'dark' ? 'bg-black/80' : 'bg-black/75'
-    }`}>
-      <div className={`w-96 p-8 rounded-lg shadow-xl transform transition-all duration-300 
-        ${theme === 'dark' ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-800'}`}>
+    <div 
+      className={`fixed inset-0 flex items-center justify-center z-50 ${
+        theme === 'dark' ? 'bg-black/80' : 'bg-black/75'
+      }`}
+      onClick={onClose}
+    >
+      <div 
+        className={`w-96 p-8 rounded-lg shadow-xl transform transition-all duration-300 
+          ${theme === 'dark' ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-800'}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* رأس الإيصال */}
         <div className="text-center mb-6">
           <h2 className={`text-2xl font-bold mb-2 ${
