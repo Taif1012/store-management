@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Arabic Font and Base Styles */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap');
+
+body {
+  font-family: 'Cairo', sans-serif;
+  direction: rtl;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark Mode Styles */
+.dark {
+  @apply bg-gray-900;
+  color: #ffffff;
+}
+
+.dark body {
+  @apply bg-gray-900;
+}
+
+.dark .card {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark .hover-card {
+  @apply hover:bg-gray-700 transition-colors duration-300;
+}
+
+/* Input Styles */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Print Styles for Receipt */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  
+  .receipt-content, .receipt-content * {
+    visibility: visible;
+  }
+  
+  .receipt-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  .receipt-content button {
+    display: none;
+  }
+
+  @page {
+    size: 80mm 297mm;
+    margin: 0;
+  }
+}
+
+/* Animation and Interaction Classes */
+@layer components {
+  .hover-scale {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+
+  .hover-shadow {
+    @apply transition-shadow duration-300 hover:shadow-lg;
+  }
+
+  .input-focus {
+    @apply focus:ring-2 focus:ring-offset-2 transition-all duration-200;
+  }
+
+  .button-animation {
+    @apply transform transition-all duration-200 hover:scale-105 active:scale-95;
+  }
+
+  .card-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .input-style {
+    @apply w-full p-3 rounded-lg border-2 transition-all duration-200
+           focus:outline-none focus:ring-2
+           dark:bg-gray-700 dark:border-gray-600 dark:text-white
+           dark:focus:border-purple-500 dark:focus:ring-purple-400;
+  }
+
+  .button-style {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200
+           transform hover:scale-105 active:scale-95
+           focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .primary-button {
+    @apply button-style bg-purple-600 text-white
+           hover:bg-purple-700 focus:ring-purple-400
+           dark:bg-purple-500 dark:hover:bg-purple-600;
+  }
+
+  .secondary-button {
+    @apply button-style bg-gray-200 text-gray-800
+           hover:bg-gray-300 focus:ring-gray-400
+           dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 dark:bg-gray-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500 dark:bg-gray-500;
+}
+
+/* Form and Card Shadows */
+.hover-card-shadow {
+  @apply transition-shadow duration-300 ease-in-out
+         hover:shadow-lg dark:shadow-gray-900/50;
+}
+
+.input-shadow {
+  @apply shadow-sm hover:shadow transition-shadow duration-200;
+}
+
+/* Loading and Transition Effects */
+.fade-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+}
+
+.fade-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+}
+
+/* Table Styles */
+.table-styles {
+  @apply w-full border-collapse;
+}
+
+.table-styles th {
+  @apply p-3 text-right bg-gray-50 dark:bg-gray-800
+         border dark:border-gray-700 font-medium;
+}
+
+.table-styles td {
+  @apply p-3 border dark:border-gray-700;
+}
+
+.table-styles tr {
+  @apply hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200;
+}
+
+/* Chart Container Styles */
+.chart-container {
+  @apply bg-white dark:bg-gray-800 rounded-lg p-4 shadow-lg;
+}
+
+/* Status Badge Styles */
+.status-badge {
+  @apply px-3 py-1 rounded-full text-sm font-medium;
+}
+
+.status-new {
+  @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200;
+}
+
+.status-completed {
+  @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+}
+
+.status-cancelled {
+  @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
+}
