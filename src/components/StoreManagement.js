@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import EnhancedAnalytics from './EnhancedAnalytics';
+import TotalAnalysis from './TotalAnalysis';
 import Receipt from './Receipt';
 import CurrencyConverter from './CurrencyConverter';
 import { useThemeMode } from '../hooks/useThemeMode';
@@ -220,7 +221,11 @@ const StoreManagement = () => {
     ? orders 
     : orders.filter(order => {
         const product = PRESET_PRODUCTS.find(p => p.name === order.productName);
-        return product?.category === selectedCategory;
+        if (!product) {
+          // For custom products, show in all categories if no specific category is set
+          return !order.category || order.category === selectedCategory;
+        }
+        return product.category === selectedCategory;
       });
 
   const stats = calculateStats();
@@ -463,9 +468,16 @@ const StoreManagement = () => {
               </div>
             </div>
 
-            {showAnalytics && <EnhancedAnalytics orders={orders} />}
+            {showAnalytics && (
+              <>
+                <EnhancedAnalytics orders={orders} />
+                <div className="mt-6">
+                  <TotalAnalysis orders={orders} />
+                </div>
+              </>
+            )}
 
-            <div className="h-80 bg-white p-4 rounded-lg shadow dark:bg-gray-700">
+            <div className="mt-6 h-80 bg-white p-4 rounded-lg shadow dark:bg-gray-700">
               <ResponsiveContainer>
                 <LineChart data={orders.map(order => ({
                   date: formatDate(order.date),
