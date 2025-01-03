@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 
 const CurrencyConverter = () => {
   const [amount, setAmount] = useState('');
-  const [exchangeRate, setExchangeRate] = useState(0.05); // Default rate
+  const [exchangeRate, setExchangeRate] = useState(() => {
+    return parseFloat(localStorage.getItem('exchangeRate')) || 0.05;
+  }); // Default rate
   const [showSettings, setShowSettings] = useState(false);
   const [result, setResult] = useState(null);
 
@@ -43,7 +45,7 @@ const CurrencyConverter = () => {
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                سعر الصرف (ليرة تركية لكل دينار عراقي)
+                سعر الصرف (₺ لكل دينار عراقي)
               </label>
               <input
                 type="number"
@@ -54,7 +56,10 @@ const CurrencyConverter = () => {
               />
             </div>
             <button
-              onClick={() => setShowSettings(false)}
+              onClick={() => {
+                localStorage.setItem('exchangeRate', exchangeRate.toString());
+                setShowSettings(false);
+              }}
               className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
             >
               حفظ
@@ -88,7 +93,7 @@ const CurrencyConverter = () => {
           <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/30 rounded-md">
             <div className="text-sm text-gray-600 dark:text-gray-300">النتيجة</div>
             <div className="text-xl font-bold text-green-600 dark:text-green-400">
-              {result} ليرة تركية
+              {result} ₺
             </div>
           </div>
         )}
