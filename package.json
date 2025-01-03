@@ -2,7 +2,6 @@
   "name": "store-management",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "dependencies": {
     "autoprefixer": "^10.4.20",
     "cra-template": "1.2.0",

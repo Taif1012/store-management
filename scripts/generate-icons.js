@@ -1,6 +1,6 @@
-import sharp from 'sharp';
-import { promises as fs } from 'fs';
-import path from 'path';
+const sharp = require('sharp');
+const fs = require('fs').promises;
+const path = require('path');
 
 const sizes = [16, 32, 64, 192, 512];
 
@@ -17,3 +17,4 @@ async function generateIcons() {
 }
 
 generateIcons().catch(console.error);
+module.exports = generateIcons;
