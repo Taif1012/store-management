@@ -26,15 +26,23 @@ const EnhancedAnalytics = ({ orders }) => {
 
   // حساب معدلات النمو
   const calculateGrowthMetrics = () => {
-    if (dailyTrends.length < 2) return { revenue: 0, profit: 0, orders: 0 };
+    const today = new Date().toISOString().split('T')[0];
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
 
-    const latest = dailyTrends[dailyTrends.length - 1];
-    const previous = dailyTrends[dailyTrends.length - 2];
+    const todayData = dailyTrends.find(day => day.date === today) || { revenue: 0, profit: 0, orders: 0 };
+    const yesterdayData = dailyTrends.find(day => day.date === yesterdayStr) || { revenue: 0, profit: 0, orders: 0 };
+
+    const calculateGrowth = (current, previous) => {
+      if (previous === 0) return current > 0 ? 100 : 0;
+      return ((current - previous) / previous) * 100;
+    };
 
     return {
-      revenue: ((latest.revenue - previous.revenue) / previous.revenue) * 100,
-      profit: ((latest.profit - previous.profit) / previous.profit) * 100,
-      orders: ((latest.orders - previous.orders) / previous.orders) * 100
+      revenue: calculateGrowth(todayData.revenue, yesterdayData.revenue),
+      profit: calculateGrowth(todayData.profit, yesterdayData.profit),
+      orders: calculateGrowth(todayData.orders, yesterdayData.orders)
     };
   };
 
