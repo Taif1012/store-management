@@ -2,6 +2,13 @@ import React from 'react';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 
+// Helper function to format currency in Turkish Lira
+const formatLira = (valueInDinar) => {
+  const exchangeRate = localStorage.getItem('exchangeRate') || 1;
+  const valueInLira = valueInDinar * exchangeRate;
+  return `${valueInLira.toLocaleString()} ₺`;
+};
+
 const Receipt = ({ order, onClose, theme }) => {
   const formatDate = (date) => {
     return format(new Date(date), 'dd MMMM yyyy', { locale: ar });
@@ -60,7 +67,10 @@ const Receipt = ({ order, onClose, theme }) => {
               <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
                 السعر:
               </span>
-              <span>{order.price} دينار عراقي</span>
+              <div className="text-left">
+                <div>{order.price.toLocaleString()} دينار عراقي</div>
+                <div className="text-sm text-gray-500">{formatLira(order.price)}</div>
+              </div>
             </div>
             <div className="flex justify-between text-sm">
               <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
@@ -74,9 +84,14 @@ const Receipt = ({ order, onClose, theme }) => {
           
           <div className="flex justify-between text-lg font-bold">
             <span>المجموع:</span>
-            <span className={
-              theme === 'dark' ? 'text-green-400' : 'text-green-600'
-            }>{order.price} دينار عراقي</span>
+            <div className="text-left">
+              <div className={theme === 'dark' ? 'text-green-400' : 'text-green-600'}>
+                {order.price.toLocaleString()} دينار عراقي
+              </div>
+              <div className="text-sm text-gray-500">
+                {formatLira(order.price)}
+              </div>
+            </div>
           </div>
 
           {order.notes && (

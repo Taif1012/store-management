@@ -4,41 +4,59 @@ const TotalAnalysis = ({ orders }) => {
   const [period, setPeriod] = useState('daily');
   const exchangeRate = localStorage.getItem('exchangeRate') || 1;
 
-  const formatCurrency = (value) => {
-    return `${value.toLocaleString()} ₺`;
+  const formatCurrency = (valueInDinar) => {
+    // Convert from Iraqi Dinar to Turkish Lira using the exchange rate
+    const valueInLira = valueInDinar * exchangeRate;
+    return `${valueInLira.toLocaleString()} ₺`;
   };
 
   const aggregateData = (data, periodType) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
     const aggregated = data.reduce((acc, order) => {
       const date = new Date(order.date);
-      const today = new Date();
-      let key;
+      date.setHours(0, 0, 0, 0);
+      let key = null;
       
       switch (periodType) {
         case 'daily':
           // Only include today's data
-          if (date.toDateString() === today.toDateString()) {
+          if (date.getTime() === today.getTime()) {
             key = order.date;
           }
           break;
-        case 'weekly':
-          // Only include last 7 days
-          const weekAgo = new Date();
-          weekAgo.setDate(today.getDate() - 7);
-          if (date >= weekAgo && date <= today) {
-            const weekStart = new Date(date);
-            weekStart.setDate(date.getDate() - date.getDay());
-            key = weekStart.toISOString().split('T')[0];
+          
+        case 'weekly': {
+          // Get start of current week (Sunday)
+          const currentWeekStart = new Date(today);
+          currentWeekStart.setDate(today.getDate() - today.getDay());
+          
+          // Get start of order's week
+          const orderWeekStart = new Date(date);
+          orderWeekStart.setDate(date.getDate() - date.getDay());
+          
+          // Include if order is from current week
+          if (orderWeekStart.getTime() === currentWeekStart.getTime()) {
+            key = orderWeekStart.toISOString().split('T')[0];
           }
           break;
-        case 'monthly':
-          // Only include last 30 days
-          const monthAgo = new Date();
-          monthAgo.setDate(today.getDate() - 30);
-          if (date >= monthAgo && date <= today) {
+        }
+          
+        case 'monthly': {
+          // Get start of current month
+          const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+          
+          // Get start of order's month
+          const orderMonthStart = new Date(date.getFullYear(), date.getMonth(), 1);
+          
+          // Include if order is from current month
+          if (orderMonthStart.getTime() === currentMonthStart.getTime()) {
             key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
           }
           break;
+        }
+          
         default:
           key = order.date;
       }
@@ -54,9 +72,12 @@ const TotalAnalysis = ({ orders }) => {
         };
       }
 
-      acc[key].spending += Number(order.cost);
-      acc[key].revenue += Number(order.price);
-      acc[key].profit += Number(order.price) - Number(order.cost);
+      // Store values in Iraqi Dinar
+      const cost = Number(order.cost);
+      const price = Number(order.price);
+      acc[key].spending += cost;
+      acc[key].revenue += price;
+      acc[key].profit += price - cost;
 
       return acc;
     }, {});
